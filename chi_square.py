@@ -9,11 +9,19 @@ english_frequencies = {
     'V': 0.009, 'W': 0.015, 'X': 0.002, 'Y': 0.020, 'Z': 0.001
 }
 
+
+# Calculate the chi-squared value for a given shift
 def calculate_chi_squared(text, shift):
     shifted_text = ''.join(chr((ord(c) - shift - 65) % 26 + 65) for c in text)
     observed_frequencies = Counter(shifted_text)
     total = sum(observed_frequencies.values())
 
+    # Calculate the chi-squared value for each letter
+    # chi-squared = sum((observed - expected)^2 / expected)
+    # observed is the frequency of the letter in the text
+    # expected is the frequency of the letter in English text
+    # sum is over all letters in the alphabet
+    # chi-squared value closer to 0 indicates a better match
     chi_squared = 0.0
     for letter in string.ascii_uppercase:
         observed = observed_frequencies[letter] / total if total > 0 else 0
@@ -37,11 +45,19 @@ def recover_keyword(text, length):
     keyword = ''
     coset_info = []
 
+    # Iterate over the cosets and find the best shift for each coset
+    # Calculate the chi-squared value for each shift
+    # Choose the shift with the smallest chi-squared value
+    # Convert the shift to the corresponding letter and append to the keyword
+    # Store the detailed information for each coset
     for coset_index, coset in enumerate(cosets):
         min_chi_squared = float('inf')
         best_shift = 0
         chi_squared_values = []
 
+        # Iterate over the possible shifts
+        # Calculate the chi-squared value for each shift
+        # Keep track of the shift with the smallest chi-squared value
         for shift in range(26):
             chi_squared = calculate_chi_squared(coset, shift)
             chi_squared_values.append((shift, chi_squared))
@@ -66,9 +82,8 @@ def display_coset_info(coset_info):
             print(f"    Shift {shift} ({chr(shift + 65)}): {chi_squared:.4f}")
 
 
-# Example usage
 text = "WQXYMREOBPVWHTHQYEQVEDEXRBGSIZSILGRTAJFZOAMAVVXGRFQGKCPIOZIJBCBLUWYRWSTUGVQPSUDIUWOESFMTBTANCYZTKTYBVFDKDERSIBJECAQDWPDERIEKGPRAQFBGTHQKVVGRAXAVTHARQEELUECGVVBJEBXIJAKNGESWTKBEDXPBQOUDWVTXESMRUWWRPAWKMTITKHFWTDAURRVFESFESTKSHFLZAEONEXZBWTIARWWTTHQYEQVEDEXRBGSOREDMTICM"
-length = 7  # Assuming length is known or estimated
+length = 7
 keyword, coset_info = recover_keyword(text, length)
 
 print(f"Recovered keyword: {keyword}")

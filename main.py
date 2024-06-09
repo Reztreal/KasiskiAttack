@@ -9,13 +9,16 @@ def find_repeated_substrings(text):
                 return True
         return False
 
+    # Iterate over the possible lengths of the substrings
     for length in range(10, 2, -1):
         current_length_substrings = defaultdict(list)
 
+        # Iterate over the text to find the substrings of the current length
         for i in range(len(text) - length + 1):
             substring = text[i:i + length]
             current_length_substrings[substring].append(i)
 
+        # Check if the substring is repeated and store the distances
         for substring, positions in current_length_substrings.items():
             if len(positions) > 1:
                 if not is_part_of_larger_substring(substring, substrings_dict):
@@ -27,7 +30,7 @@ def find_repeated_substrings(text):
 
 def calculate_factors(distances):
     factor_counts = defaultdict(int)
-
+    
     def find_factors(n):
         factors = set()
         for i in range(2, n):
@@ -36,6 +39,7 @@ def calculate_factors(distances):
                 factors.add(n // i)
         return factors
 
+    # Iterate over the distances and find the factors of each distance
     for dist_list in distances.values():
         for dist in dist_list:
             factors = find_factors(dist)
